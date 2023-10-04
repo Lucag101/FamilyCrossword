@@ -38,7 +38,8 @@
 .container{
   display: flex;
   justify-content: space-around;
-  align-items: center;
+  align-items: flex-start;
+  flex-direction: row-reverse;
 }
 
 .modal_container {
@@ -64,4 +65,25 @@
 
 .set_margins {
   margin:30px;
+}
+
+.clue_header {
+  cursor: pointer;
+  background-color: rgb(211, 219, 221);
+  padding: 15px;
+  margin-bottom: 0px;
+  /* Additional styles */
+}
+
+.closed_drop_down{
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.open_drop_down{ 
+  max-height: 700px;
+  padding: 20px;
+  background-color: rgb(228, 249, 255);
+  border: 1px;
 }

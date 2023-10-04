@@ -1,11 +1,22 @@
 import Clue from "./clue";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "@/styles/crossword.module.css";
 
 
 function ClueList(props) {
   let { verticalClues, horizontalClues, result } = props;
   const [clueList, setClueList] = useState({VERTICAL: verticalClues, HORIZONTAL:horizontalClues});
+  const [isVerticalVisible, setIsVerticalVisible] = useState(false); 
+  const [isHorizontalVisible, setIsHorizontalVisible] = useState(false);
+
+  const toggleVertical = () => {
+    setIsVerticalVisible(!isVerticalVisible);
+  };
+
+  const toggleHorizontal = () => {
+    setIsHorizontalVisible(!isHorizontalVisible);
+  };
+
   useEffect(() => {
     setClueList(makeClueList());
   }, []);
@@ -40,24 +51,28 @@ function ClueList(props) {
     <>
       <div class={styles.set_margins} >
         <h1>Clues</h1>
-        <h2>Down</h2>
+        <h2 class={styles.clue_header} onClick={toggleVertical}>Down</h2>
         {/* Create   Slide down list for cluest */}
-        {clueList.VERTICAL.map((clues) => {
-          return (
-            <div key={clues.CLUE_NUMBER}>
-              <Clue number={clues.CLUE_NUMBER} word={clues.WORD} clue={clues.CLUE} />
-            </div>
-          );
-        })}
-        <h2>Across</h2>
+        <div class={`${styles.closed_drop_down} ${isVerticalVisible ? '' :styles.open_drop_down }`}>
+          {clueList.VERTICAL.map((clues) => {
+            return (
+              <div key={clues.CLUE_NUMBER}>
+                <Clue number={clues.CLUE_NUMBER} word={clues.WORD} clue={clues.CLUE} />
+              </div>
+            );
+          })}
+        </div>
+        <h2 class={styles.clue_header} onClick={toggleHorizontal}>Across</h2>
         {/* Create Slide down list for cluest */}
-        {clueList.HORIZONTAL.map((clues) => {
-          return (
-            <div key={clues.CLUE_NUMBER}>
-              <Clue number={clues.CLUE_NUMBER} word={clues.WORD} clue={clues.CLUE} />
-            </div>
-          );
-        })}
+        <div class={`${styles.closed_drop_down} ${isHorizontalVisible ? '' :styles.open_drop_down}`}>
+          {clueList.HORIZONTAL.map((clues) => {
+            return (
+              <div key={clues.CLUE_NUMBER}>
+                <Clue number={clues.CLUE_NUMBER} word={clues.WORD} clue={clues.CLUE} />
+              </div>
+            );
+          })}
+        </div>
         <h3>Answers can be seen by right-clicking the clue</h3>
       </div>
     </>
