@@ -11,6 +11,7 @@ function Square(props) {
     clueNumber,
     dimensions,
     inputLocation,
+    clueToFocus,
   } = props;
 
   function handleChange(event) {
@@ -24,8 +25,11 @@ function Square(props) {
   return (
     <>
       <div className={styles.div}>
-        {clueNumber != 0 ? <p className={styles.number}>{clueNumber}</p> : null}
+        {clueNumber !== 0 && (
+          <p className={styles.number}>{clueNumber}</p>
+        )}
         <input
+          name={clueToFocus}
           ref={(element) =>
             (inputLocation.current[row * dimensions + col] = element)
           }
@@ -50,10 +54,12 @@ function Square(props) {
           disabled={
             key_character === "*" || key_character === "&"
           }
-        ></input>
+          autoFocus={clueNumber === clueToFocus && clueToFocus !== 0}
+        />
       </div>
     </>
   );
+  
 }
 
 export default Square;
