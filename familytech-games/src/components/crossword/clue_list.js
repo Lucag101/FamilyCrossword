@@ -56,7 +56,7 @@ function ClueList(props) {
         <div class={`${styles.closed_drop_down} ${isVerticalVisible ? '' :styles.open_drop_down }`}>
           {clueList.VERTICAL.map((clues) => {
             return (
-              <div oncClick={childToParent(clues.CLUE_NUMBER)} key={clues.CLUE_NUMBER}>
+              <div onClick={() => childToParent(clues.CLUE_NUMBER)} key={clues.CLUE_NUMBER}>
                 <Clue number={clues.CLUE_NUMBER} word={clues.WORD} clue={clues.CLUE} />
               </div>
             );
@@ -68,7 +68,7 @@ function ClueList(props) {
           {clueList.HORIZONTAL.map((clues) => {
             return (
               // add the onclick function to lead to the clue on the board
-              <div onClick={childToParent(clues.CLUE_NUMBER)} key={clues.CLUE_NUMBER}> 
+              <div onClick={() => childToParent(clues.CLUE_NUMBER)} key={clues.CLUE_NUMBER}> 
                 <Clue number={clues.CLUE_NUMBER} word={clues.WORD} clue={clues.CLUE} />
               </div>
             );
