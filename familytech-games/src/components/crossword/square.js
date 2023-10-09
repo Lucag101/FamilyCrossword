@@ -11,6 +11,7 @@ function Square(props) {
     clueNumber,
     dimensions,
     inputLocation,
+    clueToFocus,
   } = props;
 
   function handleChange(event) {

@@ -4,7 +4,7 @@ import styles from "@/styles/crossword.module.css";
 
 
 function ClueList(props) {
-  let { verticalClues, horizontalClues, result } = props;
+  let { verticalClues, horizontalClues, result, childToParent } = props;
   const [clueList, setClueList] = useState({VERTICAL: verticalClues, HORIZONTAL:horizontalClues});
   const [isVerticalVisible, setIsVerticalVisible] = useState(false); 
   const [isHorizontalVisible, setIsHorizontalVisible] = useState(false);
@@ -56,7 +56,7 @@ function ClueList(props) {
         <div class={`${styles.closed_drop_down} ${isVerticalVisible ? '' :styles.open_drop_down }`}>
           {clueList.VERTICAL.map((clues) => {
             return (
-              <div key={clues.CLUE_NUMBER}>
+              <div oncClick={childToParent(clues.CLUE_NUMBER)} key={clues.CLUE_NUMBER}>
                 <Clue number={clues.CLUE_NUMBER} word={clues.WORD} clue={clues.CLUE} />
               </div>
             );
@@ -67,7 +67,8 @@ function ClueList(props) {
         <div class={`${styles.closed_drop_down} ${isHorizontalVisible ? '' :styles.open_drop_down}`}>
           {clueList.HORIZONTAL.map((clues) => {
             return (
-              <div key={clues.CLUE_NUMBER}>
+              // add the onclick function to lead to the clue on the board
+              <div onClick={childToParent(clues.CLUE_NUMBER)} key={clues.CLUE_NUMBER}> 
                 <Clue number={clues.CLUE_NUMBER} word={clues.WORD} clue={clues.CLUE} />
               </div>
             );
