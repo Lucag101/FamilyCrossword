@@ -30,6 +30,7 @@ function Square(props) {
           ref={(element) =>
             (inputLocation.current[row * dimensions + col] = element)
           }
+          name={clueToFocus}
           className={styles.square}
           readOnly={key_character === "*" || key_character === "&"}
           style={
@@ -51,6 +52,7 @@ function Square(props) {
           disabled={
             key_character === "*" || key_character === "&"
           }
+          autoFocus={clueNumber !== 0 && clueNumber === clueToFocus}
         ></input>
       </div>
     </>
