@@ -90,6 +90,7 @@ function Board() {
 
   const childToParent = (childData) => {
     setData(childData);
+    pageUpdated();
   };
 
   // Handles what happens when a letter is changed on the board
@@ -692,62 +693,63 @@ function Board() {
     finished = true;
     return finished;
   }
-
-  let clueNumber = -1;
-  return !loading ?(
-    <>
-      <div class={styles.set_margins}>
-        {board.map((rows) => {
-          return (
-            <div className={styles.div} key={rows.id}>
-              {rows.CURRENT_ROW.map((rowItems) => {
-                {
-                  clueNumber =
-                    START_SQUARES.indexOf(
-                      START_SQUARES.filter(
-                        (e) => e.ROW == rowItems.ROW && e.COL == rowItems.COL
-                      )[0]
-                    ) + 1;
-                }
-                return (
-                  <Square
-                    row={rowItems.ROW}
-                    col={rowItems.COL}
-                    character={rowItems.CHARACTER}
-                    key_character={rowItems.KEY_CHARACTER}
-                    key={rowItems.id}
-                    clueNumber={clueNumber}
-                    handleSquareInput={handleSquareInput}
-                    handleKeyDown={handleKeyDown}
-                    dimensions={DIMENSIONS}
-                    inputLocation={inputLocation}
-                    clueToFocus={clueToFocus}
-                  />
-                );
-              })}
-            </div>
-          );
-        })}
-        {(START_SQUARES = [])}
-      </div>
-      <ClueList
-        verticalClues={vertClues}
-        horizontalClues={horClues}
-        result={clues}
-        childToParent={childToParent}
-      />
-      <Modal open={puzzleIsCorrect} onClose={() => setPuzzleIsCorrect(false)}>
-        <div className={styles.modal_container}>
-          <button
-            className={styles.close_btn}
-            onClick={() => setPuzzleIsCorrect(false)}
-          >
-            X
-          </button>
-          <h3>Congrats on solving the Crossword! </h3>
+  function pageUpdated() {
+    let clueNumber = -1;
+    return !loading ?(
+      <>
+        <div class={styles.set_margins}>
+          {board.map((rows) => {
+            return (
+              <div className={styles.div} key={rows.id}>
+                {rows.CURRENT_ROW.map((rowItems) => {
+                  {
+                    clueNumber =
+                      START_SQUARES.indexOf(
+                        START_SQUARES.filter(
+                          (e) => e.ROW == rowItems.ROW && e.COL == rowItems.COL
+                        )[0]
+                      ) + 1;
+                  }
+                  return (
+                    <Square
+                      row={rowItems.ROW}
+                      col={rowItems.COL}
+                      character={rowItems.CHARACTER}
+                      key_character={rowItems.KEY_CHARACTER}
+                      key={rowItems.id}
+                      clueNumber={clueNumber}
+                      handleSquareInput={handleSquareInput}
+                      handleKeyDown={handleKeyDown}
+                      dimensions={DIMENSIONS}
+                      inputLocation={inputLocation}
+                      clueToFocus={clueToFocus}
+                    />
+                  );
+                })}
+              </div>
+            );
+          })}
+          {(START_SQUARES = [])}
         </div>
-      </Modal>
-    </>
-  ): (<div>Loading...</div>);
+        <ClueList
+          verticalClues={vertClues}
+          horizontalClues={horClues}
+          result={clues}
+          childToParent={childToParent}
+        />
+        <Modal open={puzzleIsCorrect} onClose={() => setPuzzleIsCorrect(false)}>
+          <div className={styles.modal_container}>
+            <button
+              className={styles.close_btn}
+              onClick={() => setPuzzleIsCorrect(false)}
+            >
+              X
+            </button>
+            <h3>Congrats on solving the Crossword! </h3>
+          </div>
+        </Modal>
+      </>
+    ): (<div>Loading...</div>);
+  }
 }
 export default Board;
