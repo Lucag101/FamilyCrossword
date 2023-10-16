@@ -6,6 +6,7 @@ import { Modal } from "@mui/material";
 import { useUser } from "@/contexts/UserContext";
 import axios from 'axios'
 
+
 let START_SQUARES = [];
 
 function Board() {
@@ -18,19 +19,41 @@ function Board() {
   let justAscendencyNums = [];
   let DIMENSIONS = 32;
   const { userFSData } = useUser();
-  let ANCESTORS = [];
   let ascendencyNums = [];
+  const newAncestors = [];
+  const [clueRestriction, setClueRestriction] = useState(100);
+  const [ancestorsReady, setAncestorsReady] = useState(false);
+  const [ANCESTORS, setAncestors] = useState([]);
+  const [SORTED_CLUE_LIST, setSortedClueList] = useState([]);
   
-  //Creates an array of all names that could be added to the crossword
-  for (const [key, value] of userFSData) {
-    let currentAncestorName = value.name.compressedName;
-    ANCESTORS.push({
-      CLUE: currentAncestorName,
-      ANSWER: currentAncestorName,
-      ASCENDENCY_NUM: key,
-    });
-  }
-  let SORTED_CLUE_LIST = sortKeyWords(ANCESTORS);
+  // Creates an array of all names that could be added to the crossword
+  // **********set difficulty in the following loop*** Nicka says use UseEffect */
+
+  useEffect(() => {
+    const newAncestors = [];
+    for (const [key, value] of userFSData) {
+      if(newAncestors.length >= clueRestriction) break; 
+      let currentAncestorName = value.name.compressedName;
+      newAncestors.push({
+        CLUE: currentAncestorName,
+        ANSWER: currentAncestorName,
+        ASCENDENCY_NUM: key,
+      });
+    }
+    setAncestors(newAncestors);
+  }, [clueRestriction, userFSData]);
+
+  console.log("ANSCESTORS")
+  console.log(ANCESTORS)
+
+  useEffect(() => {
+    if(ANCESTORS.length > 0) {
+      setSortedClueList(sortKeyWords(ANCESTORS));
+    }
+  }, [ANCESTORS]);
+
+  console.log('POST-ANSCESTORS')
+  console.log(SORTED_CLUE_LIST)
   let REMAINING_WORDS = SORTED_CLUE_LIST;
   const [clues, setClues] = useState([]);
   const [board, setBoard] = useState([]);
@@ -39,7 +62,7 @@ function Board() {
   const [loading, setLoading] = useState(true);
   const [puzzleIsCorrect, setPuzzleIsCorrect] = useState(false);
   const inputLocation = useRef(new Array());
-
+  
   //Tells the page if it should be loading to make sure the clues are all set up before it is shown to the user
   useEffect(() => {
     if (clues.length > 0) {
@@ -48,17 +71,20 @@ function Board() {
   }, [clues]);
 
   useEffect(() => {
-    setBoard(
-      setUpBoard(
-        BOARD,
-        SORTED_CLUE_LIST,
-        START_SQUARES,
-        ADDED_WORDS,
-        REMAINING_WORDS,
-        NOT_ADDED
-      )
-    );
-  }, []);
+    if(SORTED_CLUE_LIST.length > 0) {
+      setBoard(
+        setUpBoard(
+          BOARD,
+          SORTED_CLUE_LIST,
+          START_SQUARES,
+          ADDED_WORDS,
+          REMAINING_WORDS,
+          NOT_ADDED
+        )
+      );
+      setLoading(false); // Indicates that the board is ready and UI can be rendered
+    }
+  }, [SORTED_CLUE_LIST]);
 
   // Handles what happens when the user solves the crossword
   useEffect(() => {
@@ -70,10 +96,18 @@ function Board() {
     //TO TEST LOCALLY, COMMENT OUT THE LOWER URL AND UNCOMMENT THE TOP ONE. THEN WHEN YOU PUSH TO MAIN, MAKE SURE THE TOP URL IS COMMENTED AND THE BOTTOM IS NOT
     //const url = "http://localhost:3000/api/questiongenerator";
     const url = "http://localhost:3000/api/questiongenerator";
-  
-    try {
+    // var smallGameNums = ascendancyNums.slice(0, 14)**
+    //THis limits the amount of clues generated but doesn't really, stop there from being how many crossword lcuea there are
+    try { 
+      console.log('FetchData Info')
+      console.log(userFSData)
+      console.log(ascendancyNums)
+      
       const res = await axios.post(url, {userFSData, ascendancyNums});
       setClues(res.data);
+      console.log("CLUES in FetchData")
+      console.log(clues)
+      console.log('finished FetchData')
     } catch (error) {
       console.log(error);
     }
@@ -83,9 +117,9 @@ function Board() {
     if (userFSData) {
       console.log("data in if statement " + Array.from(userFSData.values()).length);
       const fsDataObj = Object.fromEntries(userFSData);
-      fetchData(fsDataObj, justAscendencyNums);
+      fetchData(fsDataObj, justAscendencyNums);  //*** */
     }
-  }, [])
+  }, [SORTED_CLUE_LIST]) //SOLVED by Adding the SORTED_CLUE_LIST line to this useEffect
 
   // Handles what happens when a letter is changed on the board
   function handleSquareInput(letter, row, col, inputLocation) {
@@ -513,14 +547,18 @@ function Board() {
           ) + 1,
       });
       setVertClues(VERTICAL_WORDS)
+      console.log("VERT-CLUES")
+      console.log(vertClues)
     }
     currentBoard[collision.row].CURRENT_ROW[collision.col].KEY_CHARACTER =
       collision.character;
     return currentBoard;
   }
   // Sorts the key words from longest word to shortest word
-  function sortKeyWords(ANCESTORS) {
-    let keyWordList = getAnswersFromClues(ANCESTORS);
+  function sortKeyWords(ancestors) {
+    let keyWordList = getAnswersFromClues(ancestors);
+    console.log("keWordList")
+    console.log(keyWordList)
     keyWordList.sort(function (a, b) {
       return b.ANSWER.length - a.ANSWER.length;
     });
@@ -530,12 +568,18 @@ function Board() {
   // Allows us to get all words put into the puzzle
   function getAnswersFromClues(CLUE_LIST) {
     let ANSWERS = [];
+    console.log("ClueList2")
+    console.log(CLUE_LIST)
+    // await sleep(1000); 
+    console.log(CLUE_LIST.length)
     for (let i = 0; i < CLUE_LIST.length; i++) {
       ANSWERS.push({
         ANSWER: CLUE_LIST[i].ANSWER,
         ASCENDENCY_NUM: CLUE_LIST[i].ASCENDENCY_NUM,
       });
     }
+    console.log('ANSWERERS')
+    console.log(ANSWERS)
     return ANSWERS;
   }
   // Puts the remaining words in a random order to generate a new crossword puzzle every time
@@ -596,6 +640,8 @@ function Board() {
 
     const randomAncestor = SORTED_CLUE_LIST[Math.floor(Math.random() * SORTED_CLUE_LIST.length)]
 
+    console.log("SORTED_CLUE_LIST")
+    console.log(SORTED_CLUE_LIST,)
     BOARD = insertFirstWord(
       9,
       4,
@@ -616,10 +662,13 @@ function Board() {
       NOT_ADDED
     );
 
+    console.log("Current Checker")
+    console.log(ascendencyNums.length)
     for (let i = 0; i < ascendencyNums.length; i++) {
       justAscendencyNums[i] = ascendencyNums[i].ASCENDENCY_NUMBER;
+      
     }
-    
+    console.log(justAscendencyNums)
     return BOARD;
   }
   // Inserts the first word at a set position in the board
@@ -688,10 +737,21 @@ function Board() {
     return finished;
   }
 
+  //Reponsive button that change clue amount:
+  function handleDifficultyChange(newRestriction) {
+    setClueRestriction(newRestriction);
+  }
+
   let clueNumber = -1;
   return !loading ?(
     <>
+    {/* SET CSS for entire Board. Also follow vertClues and horClues to try and find where they originate form */}
       <div class={styles.set_margins}>
+        <div class={styles.choose_game}>
+          <button onClick={() => handleDifficultyChange(8)}>Beginner</button>
+          <button onClick={() => handleDifficultyChange(14)}>Intermediate</button>
+          <button onClick={() => handleDifficultyChange(100)}>Expert</button>
+        </div>
         {board.map((rows) => {
           return (
             <div className={styles.div} key={rows.id}>

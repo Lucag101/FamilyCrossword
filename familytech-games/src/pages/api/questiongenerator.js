@@ -13,6 +13,9 @@ export default function handler (req, res)
         fsData.setPersons(map);
         var ascendancyNums = req.body.ascendancyNums;
         var promptArray = new Array;
+        console.log("LENGTH OF CLUES!!!")
+        console.log(ascendancyNums)
+        console.log(ascendancyNums.length)
 
         //console.log('req: ', req.body)
         //console.log("size before becoming a map " + Object.entries(req.body.userFSData).length);

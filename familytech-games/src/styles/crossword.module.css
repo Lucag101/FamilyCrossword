@@ -87,3 +87,20 @@
   background-color: rgb(228, 249, 255);
   border: 1px;
 }
+
+.choose_game{
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.choose_game button{
+  height: 40px;
+  width: 150px;
+  font-family: system-ui;
+  font-weight: bold;
+  font-size: large;
+  cursor: pointer;
+  color: white;
+  margin-left: 20px;
+  background-color: #74757a;
+}

@@ -7,7 +7,7 @@ FamilyTech Games serves up different games, typically dependent upon the user's 
 
 ## To Run Locally
 
- - Git clone this repo down to your local server and enter the project folder. Then on the command line, enter the following commands:
+ - Git clone this repo down to your local server and enter the project folder. Then on the command line, enter the following commands: 
  - ```cd /src/```
 Contained within the src/ directory is the Next.js project, so you must be within this directory to start it up.
  - ```npm install```
