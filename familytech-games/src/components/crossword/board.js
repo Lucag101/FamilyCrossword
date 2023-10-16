@@ -60,6 +60,7 @@ function Board() {
   const [vertClues, setVertClues] = useState([]);
   const [horClues, setHorClues] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [clueToFocus, setData] = useState(0);
   const [puzzleIsCorrect, setPuzzleIsCorrect] = useState(false);
   const inputLocation = useRef(new Array());
   
@@ -120,6 +121,10 @@ function Board() {
       fetchData(fsDataObj, justAscendencyNums);  //*** */
     }
   }, [SORTED_CLUE_LIST]) //SOLVED by Adding the SORTED_CLUE_LIST line to this useEffect
+
+  const childToParent = (childData) => {
+    setData(childData);
+  }
 
   // Handles what happens when a letter is changed on the board
   function handleSquareInput(letter, row, col, inputLocation) {
@@ -776,6 +781,7 @@ function Board() {
                     handleKeyDown={handleKeyDown}
                     dimensions={DIMENSIONS}
                     inputLocation={inputLocation}
+                    clueToFocus={clueToFocus}
                   />
                 );
               })}
@@ -788,6 +794,7 @@ function Board() {
         verticalClues={vertClues}
         horizontalClues={horClues}
         result={clues}
+        childToParent={childToParent}
       />
       <Modal open={puzzleIsCorrect} onClose={() => setPuzzleIsCorrect(false)}>
         <div className={styles.modal_container}>
