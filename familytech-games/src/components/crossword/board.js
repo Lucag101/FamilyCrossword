@@ -747,6 +747,17 @@ function Board() {
     setClueRestriction(newRestriction);
   }
 
+  function endGame() {
+    //   for (let i = 0; i < board.length; i++) {
+    //     for (let j = 0; j < board[i].CURRENT_ROW.length; j++) {
+    //       board[i].CURRENT_ROW[j].KEY_CHARACTER = "";
+    //     }
+    // }
+    // setPuzzleIsCorrect(false);
+    // handleDifficultyChange(100);
+    location.reload();
+  }
+
   let clueNumber = -1;
   return !loading ?(
     <>
@@ -756,6 +767,7 @@ function Board() {
           <button class={styles.beginner} onClick={() => handleDifficultyChange(8)}>Beginner</button>
           <button class={styles.intermediate} onClick={() => handleDifficultyChange(14)}>Intermediate</button>
           <button class={styles.expert} onClick={() => handleDifficultyChange(100)}>Expert</button>
+          <button onClick={() => endGame()}>New Game</button>
         </div>
         {board.map((rows) => {
           return (
@@ -799,11 +811,11 @@ function Board() {
         <div className={styles.modal_container}>
           <button
             className={styles.close_btn}
-            onClick={() => setPuzzleIsCorrect(false)}
+            onClick={() => endGame()}
           >
             X
           </button>
-          <h3>Congrats on solving the Crossword! </h3>
+          <h3 class={styles.barrel_roll_container}>Congrats on solving the Crossword! </h3>
         </div>
       </Modal>
     </>
