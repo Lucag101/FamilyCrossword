@@ -753,9 +753,9 @@ function Board() {
     {/* SET CSS for entire Board. Also follow vertClues and horClues to try and find where they originate form */}
       <div class={styles.set_margins}>
         <div class={styles.choose_game}>
-          <button onClick={() => handleDifficultyChange(8)}>Beginner</button>
-          <button onClick={() => handleDifficultyChange(14)}>Intermediate</button>
-          <button onClick={() => handleDifficultyChange(100)}>Expert</button>
+          <button class={styles.beginner} onClick={() => handleDifficultyChange(8)}>Beginner</button>
+          <button class={styles.intermediate} onClick={() => handleDifficultyChange(14)}>Intermediate</button>
+          <button class={styles.expert} onClick={() => handleDifficultyChange(100)}>Expert</button>
         </div>
         {board.map((rows) => {
           return (
@@ -794,7 +794,6 @@ function Board() {
         verticalClues={vertClues}
         horizontalClues={horClues}
         result={clues}
-        childToParent={childToParent}
       />
       <Modal open={puzzleIsCorrect} onClose={() => setPuzzleIsCorrect(false)}>
         <div className={styles.modal_container}>

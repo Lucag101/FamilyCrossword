@@ -4,7 +4,7 @@ import styles from "@/styles/crossword.module.css";
 
 
 function ClueList(props) {
-  let { verticalClues, horizontalClues, result, childToParent } = props;
+  let { verticalClues, horizontalClues, result } = props;
   const [clueList, setClueList] = useState({VERTICAL: verticalClues, HORIZONTAL:horizontalClues});
   const [isVerticalVisible, setIsVerticalVisible] = useState(false); 
   const [isHorizontalVisible, setIsHorizontalVisible] = useState(false);
